@@ -20,18 +20,26 @@ app.use(express.json())
 //ROUTES
 // app.use('/', express.static(path.join(__dirname, 'index')));
 
-app.get('/', async(res,req)=>{
+app.get('/', async(req,res)=>{
      const posts=await Post.find({})
-    req.render('index',{
+    res.render('index',{
         posts
     })
 })
 
-app.get('/about',(res,req)=>{
-    req.render('about')
+app.get('/post/:id', async(req,res)=>{
+    const singlePost=await Post.findById(req.params.id);
+    res.render('post',{
+        singlePost
+    })
+    
 })
-app.get('/add',(res,req)=>{
-    req.render('add_post')
+
+app.get('/about',(req,res)=>{
+    res.render('about')
+})
+app.get('/add',(req,res)=>{
+    res.render('add_post')
 })
 
 app.post('/add_Post',async(req,res)=>{
