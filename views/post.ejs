@@ -29,6 +29,9 @@
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
          <p><%= singlePost.detail %></p>
+         <a class="btn btn-danger float-right ml-2" href="/post/<%= singlePost._id %>?_method=DELETE" onclick="alert('Are you sure?')">DELETE</a>
+         <a class="btn btn-warning float-right" href="#">UPDATE</a>
+
         </div>
       </div>
     </div>
