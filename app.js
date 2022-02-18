@@ -4,6 +4,8 @@ const app = express();
 const path = require('path');
 const Post = require('./models/Post');
 const methodOverride = require('method-override');
+const postController=require('./controller/postController')
+const pageController=require('./controller/pageController')
 //connect DB
 mongoose.connect('mongodb://localhost/cleanBlog-db', {
   useNewUrlParser: true,
@@ -25,56 +27,16 @@ app.use(
 //ROUTES
 // app.use('/', express.static(path.join(__dirname, 'index')));
 
-app.get('/', async (req, res) => {
-  const posts = await Post.find({});
-  res.render('index', {
-    posts,
-  });
-});
-
-app.get('/post/:id', async (req, res) => {
-  const singlePost = await Post.findById(req.params.id);
-  res.render('post', {
-    singlePost,
-  });
-});
-
-app.get('/about', (req, res) => {
-  res.render('about');
-});
-app.get('/add', (req, res) => {
-  res.render('add_post');
-});
-
-app.post('/add_Post', async (req, res) => {
-  await Post.create(req.body);
-  res.redirect('/');
-});
-
-app.delete('/post/:id', async (req, res) => {
-  const post = await Post.findOne({ _id: req.params.id });
-  await Post.findOneAndRemove({ _id: post.id });
-  res.redirect('/');
-});
-
-app.get('/post_edit/:id', async(req, res) => { 
-  const post = await Post.findOne({ _id: req.params.id });
-  console.log(post)
-  res.render('edit', {
-    post,
-  });
-});
-
-app.put('/post_edit/:id', async(req, res) => { 
-    const post = await Post.findOne({ _id: req.params.id });
-    // console.log(req.body.title);
-    post.title= req.body.title;
-    post.detail=req.body.detail;
-     post.save();
-    res.redirect('/')
-   
-  });
-
+//PAGE PART
+app.get('/', pageController.homePage);
+app.get('/about',pageController.aboutPage );
+app.get('/add', pageController.addPage);
+//POST PART
+app.get('/post/:id',postController.singlePost );
+app.post('/add_Post', postController.addPost);
+app.delete('/post/:id', postController.deletePost);
+app.get('/post_edit/:id', postController.postEdit);
+app.put('/post_edit/:id', postController.updatePost);
 
 const port = 3000;
 
